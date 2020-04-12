@@ -1,0 +1,5 @@
+# Heroku Build-pack git ignore
+/custom/
+.foreman
+.ruby-gemset
+.ruby-version
