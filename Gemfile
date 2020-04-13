@@ -53,3 +53,5 @@ gem "bugsnag", "~> 6.13"
 gem "figaro"
 
 gem 'data_migrate'
+
+gem 'acts_as_paranoid'
