@@ -33,5 +33,18 @@ module TempomailBackend
     config.generators do |g|
       g.test_framework :rspec
     end
+
+    # config/application.rb
+    config.action_mailer.smtp_settings = {
+        address: 'box.inboxizer.com',
+        port: 587,
+        domain: 'inboxizer.com',
+        authentication: 'plain',
+        enable_starttls_auto: true,
+        user_name: ENV['MAIL_USER_NAME'],
+        password: ENV['MAIL_PASSWORD']
+    }
+
+    config.action_mailer.delivery_method = :smtp
   end
 end
