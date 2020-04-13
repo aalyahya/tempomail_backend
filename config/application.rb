@@ -36,13 +36,13 @@ module TempomailBackend
 
     # config/application.rb
     config.action_mailer.smtp_settings = {
-        address: 'box.inboxizer.com',
+        address: Figaro.env.email_host,
         port: 587,
-        domain: 'inboxizer.com',
+        domain: Figaro.env.email_domain,
         authentication: 'plain',
         enable_starttls_auto: true,
-        user_name: ENV['MAIL_USER_NAME'],
-        password: ENV['MAIL_PASSWORD']
+        user_name: Figaro.env.email_user_name,
+        password: Figaro.env.email_password
     }
 
     config.action_mailer.delivery_method = :smtp

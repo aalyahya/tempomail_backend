@@ -55,3 +55,5 @@ gem "figaro"
 gem 'data_migrate'
 
 gem 'acts_as_paranoid'
+
+gem 'mail'
