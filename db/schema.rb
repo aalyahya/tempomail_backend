@@ -41,8 +41,9 @@ ActiveRecord::Schema.define(version: 2020_04_13_201713) do
   end
 
   create_table "messages", force: :cascade do |t|
+    t.integer "seqno", null: false
+    t.string "message_id", null: false
     t.string "email"
-    t.string "message_id"
     t.string "date"
     t.string "subject"
     t.jsonb "from", array: true
