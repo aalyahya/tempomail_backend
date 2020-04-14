@@ -3,8 +3,8 @@ class CreateMessages < ActiveRecord::Migration[6.0]
   def change
     create_table :messages do |t|
       t.integer :seqno, null: false
-      t.string :message_id, null: false
-      t.string :email
+      t.string :message_id, null: false, index: true
+      t.string :email, index: true
       t.string :date
       t.string :subject
       t.jsonb :from, array: true
@@ -19,6 +19,7 @@ class CreateMessages < ActiveRecord::Migration[6.0]
       t.text :rfc822_header
       t.text :rfc822_text
       t.timestamps null: false
+      t.timestamp :deleted_at
     end
   end
 end

@@ -7,6 +7,7 @@
 #  bcc           :jsonb            is an Array
 #  cc            :jsonb            is an Array
 #  date          :string
+#  deleted_at    :datetime
 #  email         :string
 #  from          :jsonb            is an Array
 #  in_reply_to   :string
@@ -23,7 +24,14 @@
 #  updated_at    :datetime         not null
 #  message_id    :string           not null
 #
+# Indexes
+#
+#  index_messages_on_email       (email)
+#  index_messages_on_message_id  (message_id)
+#
 class Message < ApplicationRecord
+
+  scope :message_id, -> (message_id) { where message_id: message_id }
 
   before_validation :set_email, if: :new_record?
 
