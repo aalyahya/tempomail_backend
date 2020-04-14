@@ -4,28 +4,34 @@ class EmailFetcherService
 
   REQUIRED_DATA = %w(ENVELOPE INTERNALDATE RFC822 RFC822.HEADER RFC822.TEXT)
   ENVELOPE_ADDRESSES = %w(from sender to cc bcc reply_to)
+  INBOX_FOLDER = 'INBOX'
+  JUNK_FOLDER = 'Spam'
+  ARCHIVE_FOLDER = 'Archive'
 
   def self.call
-    unread_messages = self.unread_messages
-    unread_messages.each do |message|
+    counter = 0
+
+    new_messages.each do |message|
+      counter += 1
       create_message! message
-      mark_read! message.seqno
+      archive_message! message.seqno
     end
 
-    unread_messages.size
+    connection.expunge
+
+    counter
   end
 
   private
 
-    def self.unread_messages
-      list = []
-
-      connection.search(["NOT", "SEEN"]).each do |uid|
-        data = connection.fetch(uid, REQUIRED_DATA)&.first
-        list.push(data) if data.present?
-      end
-
-      list
+    def self.new_messages
+      messages = []
+      connection.select(INBOX_FOLDER)
+      messages.concat(connection.search(['ALL']))
+      connection.select(JUNK_FOLDER)
+      messages.concat(connection.search(['ALL']))
+      connection.select(INBOX_FOLDER)
+      messages.uniq.map { |message_id| connection.fetch(message_id, REQUIRED_DATA)&.first }
     end
 
     def self.create_message!(msg)
@@ -34,6 +40,7 @@ class EmailFetcherService
 
       message = Message.new
       message.message_id = envelope.message_id
+      message.seqno = msg.seqno
 
       message.date = envelope.date
       message.subject = envelope.subject
@@ -65,8 +72,10 @@ class EmailFetcherService
       message.save!
     end
 
-    def self.mark_read!(message_id)
+    def self.archive_message!(message_id)
       connection.store(message_id, "+FLAGS", [:Seen])
+      connection.copy(message_id, ARCHIVE_FOLDER)
+      connection.store(message_id, "+FLAGS", [:Deleted])
     end
 
     def self.connection
@@ -76,11 +85,18 @@ class EmailFetcherService
 
     def self.connect_if_disconnected!
       begin
-        @@connection.select('INBOX')
+        @@connection.select(INBOX_FOLDER)
       rescue NameError, Errno::ECONNRESET, IOError
         @@connection = Net::IMAP.new(Figaro.env.email_host, 993, true)
         @@connection.login(Figaro.env.email_user_name, Figaro.env.email_password)
-        @@connection.select('INBOX')
+        @@connection.select(INBOX_FOLDER)
       end
     end
 end
+
+# msg = imap.fetch(message_id,'RFC822')[0].attr['RFC822']
+# mail = Mail.read_from_string msg
+#
+# puts mail.subject
+# puts mail.text_part.body.to_s
+# puts mail.html_part.body.to_s
