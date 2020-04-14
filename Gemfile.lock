@@ -59,6 +59,9 @@ GEM
     acts_as_paranoid (0.6.3)
       activerecord (>= 4.2, < 7.0)
       activesupport (>= 4.2, < 7.0)
+    annotate (3.1.1)
+      activerecord (>= 3.2, < 7.0)
+      rake (>= 10.4, < 14.0)
     ast (2.4.0)
     bindex (0.8.1)
     bootsnap (1.4.6)
@@ -223,6 +226,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_paranoid
+  annotate
   bootsnap (>= 1.4.2)
   bugsnag (~> 6.13)
   byebug

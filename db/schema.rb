@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_13_172306) do
+ActiveRecord::Schema.define(version: 2020_04_13_201713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,26 @@ ActiveRecord::Schema.define(version: 2020_04_13_172306) do
     t.index ["deleted_at", "email"], name: "index_email_addresses_on_deleted_at_and_email", where: "(deleted_at IS NULL)"
     t.index ["email"], name: "index_email_addresses_on_email", unique: true
     t.index ["locked_at"], name: "index_email_addresses_on_locked_at", where: "(locked_at IS NULL)"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "email"
+    t.string "message_id"
+    t.string "date"
+    t.string "subject"
+    t.jsonb "from", array: true
+    t.jsonb "sender", array: true
+    t.jsonb "reply_to", array: true
+    t.jsonb "to", array: true
+    t.jsonb "cc", array: true
+    t.jsonb "bcc", array: true
+    t.jsonb "in_reply_to", array: true
+    t.string "internal_date"
+    t.text "rfc822"
+    t.text "rfc822_header"
+    t.text "rfc822_text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   add_foreign_key "email_addresses", "agents"

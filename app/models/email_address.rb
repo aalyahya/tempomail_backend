@@ -1,4 +1,28 @@
 # frozen_string_literal: true
+
+# == Schema Information
+#
+# Table name: email_addresses
+#
+#  id         :bigint(8)        not null, primary key
+#  deleted_at :datetime
+#  email      :string           not null
+#  locked_at  :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  agent_id   :bigint(8)
+#
+# Indexes
+#
+#  index_email_addresses_on_agent_id              (agent_id)
+#  index_email_addresses_on_deleted_at_and_email  (deleted_at,email) WHERE (deleted_at IS NULL)
+#  index_email_addresses_on_email                 (email) UNIQUE
+#  index_email_addresses_on_locked_at             (locked_at) WHERE (locked_at IS NULL)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (agent_id => agents.id)
+#
 class EmailAddress < ApplicationRecord
 
   # act_as_paranoid

@@ -1,4 +1,16 @@
 # frozen_string_literal: true
+
+# == Schema Information
+#
+# Table name: agents
+#
+#  id         :bigint(8)        not null, primary key
+#  deleted_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  player_id  :string
+#  session_id :string           not null
+#
 class Agent < ApplicationRecord
 
   # act_as_paranoid
