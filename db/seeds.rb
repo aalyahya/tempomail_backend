@@ -5,3 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+
+EmailAddress.create!(email: 'flower-658234@inboxizer.com')
+
+# Create Messages
+EmailFetcherService.call
