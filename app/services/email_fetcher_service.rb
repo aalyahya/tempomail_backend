@@ -1,14 +1,12 @@
+# frozen_string_literal: true
 class EmailFetcherService
   require 'net/imap'
 
   REQUIRED_DATA = %w(ENVELOPE INTERNALDATE RFC822 RFC822.HEADER RFC822.TEXT)
-  ENVELOPE_ADDRESSES = %w(from sender to cc bcc in_reply_to reply_to)
+  ENVELOPE_ADDRESSES = %w(from sender to cc bcc reply_to)
 
   def self.call
-    connect_if_disconnected!
-
     unread_messages = self.unread_messages
-
     unread_messages.each do |message|
       create_message! message
       mark_read! message.seqno
@@ -24,37 +22,45 @@ class EmailFetcherService
 
       connection.search(["NOT", "SEEN"]).each do |uid|
         data = connection.fetch(uid, REQUIRED_DATA)&.first
-        list << data if data
+        list.push(data) if data.present?
       end
 
       list
     end
 
     def self.create_message!(msg)
-      return if Message.find_by(seqno: msg.seqno)
+      envelope = msg.attr['ENVELOPE']
+      return if Message.find_by(message_id: envelope.message_id)
 
       message = Message.new
-      message.seqno = msg.seqno
-      message.internal_date = msg.attr['INTERNALDATE']
-      message.rfc822 = msg.attr['RFC822']
-      message.rfc822_header = msg.attr['RFC822.HEADER']
-      message.rfc822_text = msg.attr['RFC822.TEXT']
-
-      envelope = msg.attr['ENVELOPE']
+      message.message_id = envelope.message_id
 
       message.date = envelope.date
       message.subject = envelope.subject
-      message.message_id = envelope.message_id
+      message.in_reply_to = envelope.in_reply_to
 
       ENVELOPE_ADDRESSES.each do |type|
-        message.send("#{type}=", [])
+        method_name = "#{type}="
+        message.send(method_name, [])
+
         next if envelope[type].blank?
 
         envelope[type].each do |address|
-          data = {name: address.name, route: address.route, mailbox: address.mailbox, host: address.host}
-          message.send("#{type}=", message.send("#{type}").push(data))
+          element = {
+              name: address.name,
+              route: address.route,
+              mailbox: address.mailbox,
+              host: address.host
+          }
+          value = message.send("#{type}").push(element)
+          message.send(method_name, value)
         end
       end
+
+      message.rfc822 = msg.attr['RFC822']
+      message.rfc822_header = msg.attr['RFC822.HEADER']
+      message.rfc822_text = msg.attr['RFC822.TEXT']
+      message.internal_date = msg.attr['INTERNALDATE']
 
       message.save!
     end

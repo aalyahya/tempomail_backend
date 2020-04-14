@@ -13,7 +13,7 @@ class CreateMessages < ActiveRecord::Migration[6.0]
       t.jsonb :to, array: true
       t.jsonb :cc, array: true
       t.jsonb :bcc, array: true
-      t.jsonb :in_reply_to, array: true
+      t.string :in_reply_to
       t.string :internal_date
       t.text :rfc822
       t.text :rfc822_header

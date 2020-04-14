@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 2020_04_13_201713) do
     t.jsonb "to", array: true
     t.jsonb "cc", array: true
     t.jsonb "bcc", array: true
-    t.jsonb "in_reply_to", array: true
+    t.string "in_reply_to"
     t.string "internal_date"
     t.text "rfc822"
     t.text "rfc822_header"

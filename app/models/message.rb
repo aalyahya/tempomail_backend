@@ -9,7 +9,7 @@
 #  date          :string
 #  email         :string
 #  from          :jsonb            is an Array
-#  in_reply_to   :jsonb            is an Array
+#  in_reply_to   :string
 #  internal_date :string
 #  reply_to      :jsonb            is an Array
 #  rfc822        :text
@@ -30,7 +30,7 @@ class Message < ApplicationRecord
   private
 
     def set_email
-      (to + cc + bcc).uniq.sort.select { |address| address && address['host'] == 'inboxizer.com' }.map { |address| "#{address['mailbox']}@#{address['host']}" }.each do |e|
+      (to + cc + bcc).select { |address| address && address['host'] == 'inboxizer.com' }.map { |address| "#{address['mailbox']}@#{address['host']}" }.uniq.each do |e|
         email_address = EmailAddress.find_by(email: e)
         next if email_address.blank?
 
