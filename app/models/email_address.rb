@@ -8,6 +8,7 @@
 #  deleted_at :datetime
 #  email      :string           not null
 #  locked_at  :datetime
+#  uuid       :uuid
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  agent_id   :bigint(8)
@@ -25,16 +26,19 @@
 #
 class EmailAddress < ApplicationRecord
 
+  has_many :messages, optional: true
   # act_as_paranoid
 
   scope :available, -> { where(locked_by: nil) }
+  scope :agent, -> (agent_id) { where(agent_id: agent_id) }
 
   validates :email, presence: true
   validates :email, uniqueness: true, if: [:email_changed?, :email?]
 
   def self.claim_for!(agent_id)
-    email = available.shuffle.first!
+    email = available.first!
     email.claim_for! agent_id
+    email
   end
 
   def available?
@@ -43,6 +47,10 @@ class EmailAddress < ApplicationRecord
 
   def not_available?
     !available?
+  end
+
+  def read_only?
+    Time.new < locked_at + 1.hour
   end
 
   private

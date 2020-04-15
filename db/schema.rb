@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -13,7 +14,9 @@
 ActiveRecord::Schema.define(version: 2020_04_13_201713) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
   create_table "agents", force: :cascade do |t|
     t.string "session_id", null: false
@@ -27,6 +30,7 @@ ActiveRecord::Schema.define(version: 2020_04_13_201713) do
   end
 
   create_table "email_addresses", force: :cascade do |t|
+    t.uuid "uuid", default: -> { "uuid_generate_v4()" }
     t.string "email", null: false
     t.bigint "agent_id"
     t.datetime "created_at", precision: 6, null: false
@@ -42,7 +46,7 @@ ActiveRecord::Schema.define(version: 2020_04_13_201713) do
   create_table "messages", force: :cascade do |t|
     t.integer "seqno", null: false
     t.string "message_id", null: false
-    t.string "email"
+    t.bigint "email_address_id"
     t.string "date"
     t.string "subject"
     t.jsonb "from", array: true
@@ -59,9 +63,10 @@ ActiveRecord::Schema.define(version: 2020_04_13_201713) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "deleted_at"
-    t.index ["email"], name: "index_messages_on_email"
+    t.index ["email_address_id"], name: "index_messages_on_email_address_id"
     t.index ["message_id"], name: "index_messages_on_message_id"
   end
 
   add_foreign_key "email_addresses", "agents"
+  add_foreign_key "messages", "email_addresses"
 end

@@ -13,12 +13,15 @@
 #
 class Agent < ApplicationRecord
 
-  # act_as_paranoid
-
-  validates :session_id, presence: true
-  validates :session_id, uniqueness: true, if: [:session_id_changed?, :session_id?]
+  has_many :email_addresses, optional: true
+  has_many :messages, through: :email_addresses
 
   after_create :claim_email
+
+  def email
+    last_email = email_addresses.last
+    last_email.read_only? ? claim_email : last_email
+  end
 
   private
 

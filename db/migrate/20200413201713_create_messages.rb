@@ -4,7 +4,7 @@ class CreateMessages < ActiveRecord::Migration[6.0]
     create_table :messages do |t|
       t.integer :seqno, null: false
       t.string :message_id, null: false, index: true
-      t.string :email, index: true
+      t.references :email_address, index: true, foreign_key: true, null: true
       t.string :date
       t.string :subject
       t.jsonb :from, array: true
