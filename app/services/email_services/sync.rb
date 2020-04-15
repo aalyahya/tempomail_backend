@@ -1,14 +1,10 @@
 # frozen_string_literal: true
-class EmailServices::FetcherService
-  require 'net/imap'
+class EmailServices::Sync < EmailServices::Base
 
   REQUIRED_DATA = %w(ENVELOPE INTERNALDATE RFC822 RFC822.HEADER RFC822.TEXT)
   ENVELOPE_ADDRESSES = %w(from sender to cc bcc reply_to)
-  INBOX_FOLDER = 'INBOX'
-  JUNK_FOLDER = 'Spam'
-  ARCHIVE_FOLDER = 'Archive'
 
-  def self.call
+  def call
     counter = 0
 
     new_messages.each do |message|
@@ -17,26 +13,26 @@ class EmailServices::FetcherService
       archive_message! message.seqno
     end
 
-    connection.expunge
+    imap.expunge
 
     counter
   end
 
   private
 
-    def self.new_messages
+    def new_messages
       messages = []
-      connection.select(INBOX_FOLDER)
-      messages.concat(connection.search(['ALL']))
-      connection.select(JUNK_FOLDER)
-      messages.concat(connection.search(['ALL']))
-      connection.select(INBOX_FOLDER)
-      messages.uniq.map { |message_id| connection.fetch(message_id, REQUIRED_DATA)&.first }
+      imap.select(INBOX_FOLDER)
+      messages.concat(imap.search(['ALL']))
+      imap.select(JUNK_FOLDER)
+      messages.concat(imap.search(['ALL']))
+      imap.select(INBOX_FOLDER)
+      messages.uniq.map { |message_id| imap.fetch(message_id, REQUIRED_DATA)&.first }
     end
 
-    def self.create_message!(msg)
+    def create_message!(msg)
       envelope = msg.attr['ENVELOPE']
-      return if Message.find_by(message_id: envelope.message_id)
+      return if Message.where(message_id: envelope.message_id).exists?
 
       message = Message.new
       message.message_id = envelope.message_id
@@ -72,25 +68,10 @@ class EmailServices::FetcherService
       message.save!
     end
 
-    def self.archive_message!(message_id)
-      connection.store(message_id, "+FLAGS", [:Seen])
-      connection.copy(message_id, ARCHIVE_FOLDER)
-      connection.store(message_id, "+FLAGS", [:Deleted])
-    end
-
-    def self.connection
-      connect_if_disconnected!
-      @@connection
-    end
-
-    def self.connect_if_disconnected!
-      begin
-        @@connection.select(INBOX_FOLDER)
-      rescue NameError, Errno::ECONNRESET, IOError
-        @@connection = Net::IMAP.new(Figaro.env.email_host, 993, true)
-        @@connection.login(Figaro.env.email_user_name, Figaro.env.email_password)
-        @@connection.select(INBOX_FOLDER)
-      end
+    def archive_message!(message_id)
+      imap.store(message_id, "+FLAGS", [:Seen])
+      imap.copy(message_id, ARCHIVE_FOLDER)
+      imap.store(message_id, "+FLAGS", [:Deleted])
     end
 end
 
