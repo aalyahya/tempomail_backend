@@ -7,7 +7,10 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-EmailAddress.create!(email: 'flower-658234@inboxizer.com')
+# EmailAddress.create!(email: 'flower-658234@inboxizer.com')
+# Create emails
+EmailServices::Alias::Index.new.call
+EmailServices::Alias::Create.new.call
 
 # Create Messages
-EmailFetcherService.call
+EmailServices::Sync.new.call
