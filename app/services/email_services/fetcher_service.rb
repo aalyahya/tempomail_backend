@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class EmailFetcherService
+class EmailServices::FetcherService
   require 'net/imap'
 
   REQUIRED_DATA = %w(ENVELOPE INTERNALDATE RFC822 RFC822.HEADER RFC822.TEXT)
