@@ -50,14 +50,15 @@ end
 group :production do
   gem 'puma_worker_killer'
   gem 'rails_12factor'
-  gem 'newrelic_rpm'
-  gem 'scout'
 end
+
+# gem 'newrelic_rpm'
+# gem 'scout'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem "bugsnag", "~> 6.13"
+# gem "bugsnag", "~> 6.13"
 
 gem "figaro"
 
