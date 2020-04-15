@@ -70,6 +70,9 @@ gem 'mail'
 gem 'local-subdomain'
 
 gem 'strip_attributes'
+
 gem "englishize_digits", github: "morniio/englishize_digits", branch: "master"
+
 gem 'letter_opener'
 
+gem 'delayed_job_active_record'

@@ -49,5 +49,12 @@ module TempomailBackend
     config.action_mailer.delivery_method = :smtp
 
     config.hosts << Figaro.env.host
+
+    config.active_job.queue_adapter = :delayed_job
+
+    Delayed::Worker.queue_attributes = {
+        high_priority: { priority: -10 },
+        low_priority: { priority: 10 }
+    }
   end
 end

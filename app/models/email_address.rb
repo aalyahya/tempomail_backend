@@ -49,7 +49,7 @@ class EmailAddress < ApplicationRecord
   end
 
   def read_only?
-    Time.new < locked_at + 1.hour
+    Time.new > locked_at + 1.hour
   end
 
   private
@@ -61,5 +61,7 @@ class EmailAddress < ApplicationRecord
       self.locked_at = Time.new
       self.expire_at = locked_at + 1.hour
       save!
+
+      self
     end
 end
