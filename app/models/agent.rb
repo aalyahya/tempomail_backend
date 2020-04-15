@@ -17,7 +17,7 @@ class Agent < ApplicationRecord
 
   acts_as_paranoid
 
-  after_create :claim_email
+  after_create :claim_email, :reload
 
   def email
     last_email = email_addresses.last

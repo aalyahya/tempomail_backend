@@ -1,4 +1,17 @@
 <div class="container text-center">
   <h1>INBOXIZER.COM</h1>
-  <p>Your email is: <b><%= @email.email %></b></p>
+  <h3>Your email is: <b><%= email_address.email %></b></h3>
+  <p>You have <%= messages.count %> messages.
+  <p></p>
+  <hr>
+  <ul>
+    <% messages.each do |message| %>
+      <% %w[from to cc bcc].each do |col| %>
+        <li><%= col.upcase %>: <%= message.send(col).map { |e| "#{e["name"]} <#{e['mailbox']}@#{e['host']}>"}.join('; ') %></li>
+      <% end %>
+      <li>Subject: <%= message.subject %></li>
+      <li>Body: <%= message.body %></li>
+      <hr>
+    <% end %>
+  </ul>
 </div>

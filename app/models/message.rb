@@ -42,6 +42,10 @@ class Message < ApplicationRecord
 
   before_validation :set_email, if: :new_record?
 
+  def body
+    rfc822_text
+  end
+  
   private
 
     def set_email
