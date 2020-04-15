@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/morniio/englishize_digits.git
+  revision: 05fff5029e9b95aa71faa8675942f025f7f281a6
+  branch: master
+  specs:
+    englishize_digits (0.1.1)
+      activemodel (>= 3.0, < 7.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -59,6 +67,8 @@ GEM
     acts_as_paranoid (0.6.3)
       activerecord (>= 4.2, < 7.0)
       activesupport (>= 4.2, < 7.0)
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
     annotate (3.1.1)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
@@ -75,11 +85,14 @@ GEM
     data_migrate (6.3.0)
       rails (>= 5.0)
     diff-lcs (1.3)
+    elif (0.1.0)
     erubi (1.9.0)
     ffi (1.12.2)
     figaro (1.1.1)
       thor (~> 0.14)
     foreman (0.87.1)
+    get_process_mem (0.2.5)
+      ffi (~> 1.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     i18n (1.8.2)
@@ -87,10 +100,15 @@ GEM
     jaro_winkler (1.5.4)
     jbuilder (2.10.0)
       activesupport (>= 5.0.0)
+    launchy (2.5.0)
+      addressable (~> 2.7)
+    letter_opener (1.7.0)
+      launchy (~> 2.2)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
+    local-subdomain (1.0.2)
     loofah (2.5.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -104,6 +122,7 @@ GEM
     mini_portile2 (2.4.0)
     minitest (5.14.0)
     msgpack (1.3.3)
+    newrelic_rpm (5.7.0.350)
     nio4r (2.5.2)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
@@ -111,8 +130,12 @@ GEM
     parser (2.7.1.0)
       ast (~> 2.4.0)
     pg (1.2.3)
+    public_suffix (4.0.4)
     puma (4.3.3)
       nio4r (~> 2.0)
+    puma_worker_killer (0.1.1)
+      get_process_mem (~> 0.2)
+      puma (>= 2.7, < 5)
     rack (2.2.2)
     rack-proxy (0.6.5)
       rack
@@ -138,6 +161,11 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.3.0)
       loofah (~> 2.3)
+    rails_12factor (0.0.3)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.5)
+    rails_stdout_logging (0.0.5)
     railties (6.0.2.2)
       actionpack (= 6.0.2.2)
       activesupport (= 6.0.2.2)
@@ -187,6 +215,10 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    scout (5.9.13)
+      elif
+      server_metrics (>= 1.2.18)
+    server_metrics (1.2.18)
     spring (2.1.0)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -198,6 +230,8 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    strip_attributes (1.11.0)
+      activemodel (>= 3.0, < 7.0)
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -231,19 +265,27 @@ DEPENDENCIES
   bugsnag (~> 6.13)
   byebug
   data_migrate
+  englishize_digits!
   figaro
   foreman
   jbuilder (~> 2.7)
+  letter_opener
   listen (>= 3.0.5, < 3.2)
+  local-subdomain
   mail
+  newrelic_rpm
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
+  puma_worker_killer
   rails (~> 6.0.2)
+  rails_12factor
   rspec-rails (~> 4.0.0)
   rubocop
   sass-rails (>= 6)
+  scout
   spring
   spring-watcher-listen (~> 2.0.0)
+  strip_attributes
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)

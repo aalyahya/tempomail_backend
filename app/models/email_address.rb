@@ -7,8 +7,8 @@
 #  id         :bigint(8)        not null, primary key
 #  deleted_at :datetime
 #  email      :string           not null
+#  expire_at  :datetime
 #  locked_at  :datetime
-#  uuid       :uuid
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  agent_id   :bigint(8)
@@ -25,11 +25,11 @@
 #  fk_rails_...  (agent_id => agents.id)
 #
 class EmailAddress < ApplicationRecord
+  has_many :messages
 
-  has_many :messages, optional: true
-  # act_as_paranoid
+  acts_as_paranoid
 
-  scope :available, -> { where(locked_by: nil) }
+  scope :available, -> { where(agent_id: nil) }
   scope :agent, -> (agent_id) { where(agent_id: agent_id) }
 
   validates :email, presence: true
@@ -37,8 +37,7 @@ class EmailAddress < ApplicationRecord
 
   def self.claim_for!(agent_id)
     email = available.first!
-    email.claim_for! agent_id
-    email
+    email.send(:claim_for!, agent_id)
   end
 
   def available?
@@ -58,7 +57,9 @@ class EmailAddress < ApplicationRecord
     def claim_for!(agent_id)
       raise ActiveRecord::RecordInvalid if not_available?
 
-      update!(agent_id: agent_id, locked_at: Time.new)
-      email
+      self.agent_id = agent_id
+      self.locked_at = Time.new
+      self.expire_at = locked_at + 1.hour
+      save!
     end
 end

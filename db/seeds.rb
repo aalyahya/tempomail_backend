@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 #
@@ -7,10 +8,9 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-# EmailAddress.create!(email: 'flower-658234@inboxizer.com')
 # Create emails
 EmailServices::Alias::Index.new.call
-EmailServices::Alias::Create.new.call
+# EmailServices::Alias::Create.new.call
 
 # Create Messages
 EmailServices::Sync.new.call

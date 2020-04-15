@@ -34,10 +34,11 @@
 #  fk_rails_...  (email_address_id => email_addresses.id)
 #
 class Message < ApplicationRecord
-
   belongs_to :email_address, optional: true
 
   scope :message_id, -> (message_id) { where message_id: message_id }
+
+  acts_as_paranoid
 
   before_validation :set_email, if: :new_record?
 

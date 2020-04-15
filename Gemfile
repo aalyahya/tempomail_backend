@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -46,6 +47,13 @@ group :development do
   gem 'annotate'
 end
 
+group :production do
+  gem 'puma_worker_killer'
+  gem 'rails_12factor'
+  gem 'newrelic_rpm'
+  gem 'scout'
+end
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
@@ -59,4 +67,9 @@ gem 'acts_as_paranoid'
 
 gem 'mail'
 
+gem 'local-subdomain'
+
+gem 'strip_attributes'
+gem "englishize_digits", github: "morniio/englishize_digits", branch: "master"
+gem 'letter_opener'
 

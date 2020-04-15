@@ -6,6 +6,7 @@ class CreateEmailAddresses < ActiveRecord::Migration[6.0]
       t.references :agent, index: true, foreign_key: true, null: true
       t.timestamps null: false
       t.timestamp :locked_at
+      t.timestamp :expire_at
       t.timestamp :deleted_at
       t.index [:email], unique: true
       t.index [:deleted_at, :email], where: '(deleted_at IS NULL)'

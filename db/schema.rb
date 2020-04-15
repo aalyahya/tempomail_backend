@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2020_04_13_201713) do
   enable_extension "uuid-ossp"
 
   create_table "agents", force: :cascade do |t|
-    t.string "session_id", null: false
+    t.uuid "uuid", default: -> { "uuid_generate_v4()" }
     t.string "player_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -30,12 +30,12 @@ ActiveRecord::Schema.define(version: 2020_04_13_201713) do
   end
 
   create_table "email_addresses", force: :cascade do |t|
-    t.uuid "uuid", default: -> { "uuid_generate_v4()" }
     t.string "email", null: false
     t.bigint "agent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "locked_at"
+    t.datetime "expire_at"
     t.datetime "deleted_at"
     t.index ["agent_id"], name: "index_email_addresses_on_agent_id"
     t.index ["deleted_at", "email"], name: "index_email_addresses_on_deleted_at_and_email", where: "(deleted_at IS NULL)"

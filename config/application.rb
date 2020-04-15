@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'boot'
 
 require "rails"
@@ -46,5 +47,7 @@ module TempomailBackend
     }
 
     config.action_mailer.delivery_method = :smtp
+
+    config.hosts << Figaro.env.host
   end
 end
